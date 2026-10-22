@@ -52,7 +52,7 @@ st.markdown("""<style>
 </style>""", unsafe_allow_html=True)
 
 TARGET = "Ladder score"
-EXCLUDE = {"Standard error of ladder score", "upperwhisker", "lowerwhisker"}
+EXCLUDE = {"Standard error of ladder score", "upperwhisker", "lowerwhisker", "Ladder score in Dystopia", "Dystopia + residual"}
 
 st.title("🌍 World Happiness Explorer")
 st.caption("Explore socioeconomic indicators and predict national happiness using linear regression.")
@@ -63,34 +63,34 @@ with st.sidebar:
     uploaded_file = st.file_uploader("Upload a CSV file", type="csv")
     st.caption("Expected: world-happiness-report-2021.csv · Must contain 'Ladder score' and at least two numeric predictor columns.")
 if uploaded_file is None:
-    st.info("Upload your World Happiness Report 2021 CSV using the sidebar to get started.")
-    st.stop()
-try:
-    df = pd.read_csv(uploaded_file)
-except Exception as exc:
-    st.error(f"Could not read the CSV: {exc}")
-    st.stop()
+    st.info("Upload the World Happiness Report 2021 CSV in the sidebar to activate the dashboard.")
+    st.subheader("Dataset overview")
+    st.caption("Your dataset summary and preview will appear here after upload.")
+    st.divider()
+    st.subheader("Explore happiness")
+    st.caption("Select an X-axis feature and chart type after uploading your CSV.")
+    st.divider()
+    st.subheader("Predict happiness")
+    st.caption("Choose two predictors to estimate the happiness Ladder score after uploading your CSV.")
+    st.divider()
+    st.subheader("Model purpose and risk")
+    st.write("This model uses 2021 survey-based happiness data, which may contain sampling and response biases and may not reflect current conditions. Therefore, its predictions should serve only as a historical benchmark, as using them to guide public policy or resource allocation could misdirect funding, overlook vulnerable populations, and create social and economic costs.")
+else:
+    try:
+        df = pd.read_csv(uploaded_file)
+    except Exception as exc:
+        st.error(f"Could not read the CSV: {exc}")
+        st.stop()
 
-if TARGET not in df.columns:
-    st.error("Your CSV must contain a column named 'Ladder score'.")
-    st.stop()
-df[TARGET] = pd.to_numeric(df[TARGET], errors="coerce")
+    if TARGET not in df.columns:
+        st.error("Your CSV must contain a column named 'Ladder score'.")
+        st.stop()
+    df[TARGET] = pd.to_numeric(df[TARGET], errors="coerce")
 
-numeric_cols = df.select_dtypes(include="number").columns.tolist()
-features = [c for c in numeric_cols if c != TARGET and c not in EXCLUDE]
-if len(features) < 2:
-    st.error("Your CSV needs at least two numeric predictor columns in addition to 'Ladder score'.")
-    st.stop()
+    numeric_cols = df.select_dtypes(include="number").columns.tolist()
+    features = [c for c in numeric_cols if c != TARGET and c not in EXCLUDE and not c.startswith("Explained by:")]
+    if len(features) < 2:
+        st.error("Your CSV needs at least two numeric predictor columns in addition to 'Ladder score'.")
+        st.stop()
 
-st.subheader("Dataset overview")
-c1, c2, c3, c4 = st.columns(4)
-c1.metric("Rows", f"{len(df):,}")
-c2.metric("Columns", len(df.columns))
-c3.metric("Numeric features", len(features))
-c4.metric("Average happiness", f"{df[TARGET].mean():.2f}" if df[TARGET].notna().any() else "N/A")
-with st.expander("Preview uploaded data", expanded=True):
-    st.dataframe(df.head(5), use_container_width=True)
-    st.caption("First 5 rows of the uploaded CSV")
-
-# Choose the column + chart type — filters sit directly above the chart
-st.divider()
+    st.subheader("Dataset overview")
