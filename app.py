@@ -30,6 +30,23 @@ st.markdown("""<style>
 /* Keep the upload area readable, including on dark themes. */
 [data-testid="stFileUploaderDropzone"] {background-color:#f1f5f9; border:1px dashed #94a3b8;}
 [data-testid="stFileUploaderDropzone"] * {color:#334155 !important;}
+/* Streamlit's upload button has nested text styles that may override its parent. */
+[data-testid="stFileUploaderDropzone"] button,
+[data-testid="stFileUploaderDropzone"] button * {
+    color:#273244 !important;
+    -webkit-text-fill-color:#273244 !important;
+    opacity:1 !important;
+}
+[data-testid="stFileUploaderDropzone"] button {
+    background-color:#ffffff !important;
+    border:1px solid #94a3b8 !important;
+    box-shadow:none !important;
+}
+[data-testid="stFileUploaderDropzone"] button:hover {
+    background-color:#e2e8f0 !important;
+    border-color:#64748b !important;
+}
+[data-testid="stFileUploaderDropzone"] svg {fill:#273244 !important; stroke:#273244 !important;}
 .block-container {padding-top:2rem; max-width:1250px;}
 [data-testid="stMetric"] {background:#f8fafc; border:1px solid #e2e8f0; padding:18px; border-radius:12px;}
 [data-testid="stMetric"] * {color:#273244 !important;}
