@@ -5,12 +5,35 @@ from sklearn.linear_model import LinearRegression
 
 # Configuration
 st.set_page_config(page_title="World Happiness Explorer", page_icon="🌍", layout="wide")
-st.markdown('''<style>
+st.markdown("""<style>
 [data-testid="stSidebar"] {background-color:#1e293b;}
-[data-testid="stSidebar"] * {color:#f1f5f9;}
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3,
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] [data-testid="stWidgetLabel"] {color:#f1f5f9 !important;}
+/* Dark text on light select controls, including their selected values. */
+[data-testid="stSidebar"] [data-baseweb="select"] > div {
+    background-color:#f8fafc !important;
+    border:1px solid #cbd5e1 !important;
+    border-radius:9px !important;
+    color:#273244 !important;
+}
+[data-testid="stSidebar"] [data-baseweb="select"] span,
+[data-testid="stSidebar"] [data-baseweb="select"] input,
+[data-testid="stSidebar"] [data-baseweb="select"] svg {
+    color:#273244 !important;
+    fill:#273244 !important;
+    -webkit-text-fill-color:#273244 !important;
+}
+/* Keep the upload area readable, including on dark themes. */
+[data-testid="stFileUploaderDropzone"] {background-color:#f1f5f9; border:1px dashed #94a3b8;}
+[data-testid="stFileUploaderDropzone"] * {color:#334155 !important;}
 .block-container {padding-top:2rem; max-width:1250px;}
 [data-testid="stMetric"] {background:#f8fafc; border:1px solid #e2e8f0; padding:18px; border-radius:12px;}
-</style>''', unsafe_allow_html=True)
+[data-testid="stMetric"] * {color:#273244 !important;}
+</style>""", unsafe_allow_html=True)
 
 TARGET = "Ladder score"
 EXCLUDE = {"Standard error of ladder score", "upperwhisker", "lowerwhisker"}
@@ -21,7 +44,8 @@ st.caption("Explore socioeconomic indicators and predict national happiness usin
 # File upload
 with st.sidebar:
     st.header("Dataset")
-    uploaded_file = st.file_uploader("Upload the World Happiness Report 2021 CSV file", type="csv")
+    uploaded_file = st.file_uploader("Upload a CSV file", type="csv")
+    st.caption("Expected: world-happiness-report-2021.csv · Must contain 'Ladder score' and at least two numeric predictor columns.")
 if uploaded_file is None:
     st.info("Upload your World Happiness Report 2021 CSV using the sidebar to get started.")
     st.stop()
@@ -30,7 +54,7 @@ try:
 except Exception as exc:
     st.error(f"Could not read the CSV: {exc}")
     st.stop()
-
+    
 if TARGET not in df.columns:
     st.error("Your CSV must contain a column named 'Ladder score'.")
     st.stop()
