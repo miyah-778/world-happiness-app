@@ -47,7 +47,7 @@ with st.sidebar:
     st.caption("Expected: world-happiness-report-2021.csv · Must include 'Ladder score' and at least two numeric predictors.")
 
 # Tabs are always visible, including before upload.
-overview_tab, explore_tab, predict_tab = st.tabs(["Dataset Overview", "Explore Happiness", "Predict Happiness"])
+overview_tab, explore_tab, predict_tab, risk_tab = st.tabs(["Dataset Overview", "Explore Happiness", "Predict Happiness", "Model Purpose & Risk"])
 
 # Load and validate the CSV once, before using it in the tabs.
 df = None
@@ -170,12 +170,12 @@ with predict_tab:
                     st.write(f"{x2}: {model.coef_[1]:.4f}")
                     st.caption(f"Model trained on {len(train)} complete rows.")
 
-st.divider()
-st.subheader("Model purpose and risk")
-st.write(
-    "This model uses 2021 survey-based happiness data, which may contain sampling and "
-    "response biases and may not reflect current conditions. Therefore, its predictions "
-    "should serve only as a historical benchmark, as using them to guide public policy or "
-    "resource allocation could misdirect funding, overlook vulnerable populations, and "
-    "create social and economic costs."
-)
+with risk_tab:
+    st.subheader("Model purpose and risk")
+    st.write(
+        "This model uses 2021 survey-based happiness data, which may contain sampling and "
+        "response biases and may not reflect current conditions. Therefore, its predictions "
+        "should serve only as a historical benchmark, as using them to guide public policy or "
+        "resource allocation could misdirect funding, overlook vulnerable populations, and "
+        "create social and economic costs."
+    )
